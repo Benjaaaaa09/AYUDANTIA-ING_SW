@@ -31,12 +31,6 @@ export const updateProfile = async (req, res) => {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    if (user.id !== userId) {
-      return res.status(403).json({ 
-        message: "No tienes permisos para actualizar este perfil" 
-      });
-    }
-
     // Actualizar solo los campos proporcionados
     if (email) user.email = email;
     if (password) {
@@ -71,12 +65,6 @@ export const deleteProfile = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({ message: "Usuario no encontrado" });
-    }
-
-    if (user.id !== userId) {
-      return res.status(403).json({ 
-        message: "No tienes permisos para eliminar esta cuenta" 
-      });
     }
 
     await userRepository.remove(user);
