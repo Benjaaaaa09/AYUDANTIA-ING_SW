@@ -19,7 +19,6 @@ export function getPrivateProfile(req, res) {
   });
 }
 
-
 export const updateProfile = async (req, res) => {
   try {
     const userId = req.user.id; // ID extraído del token JWT
@@ -30,11 +29,6 @@ export const updateProfile = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({ message: "Usuario no encontrado" });
-    }
-
-    const { error } = userQueryValidation.validate(email, password);
-    if ( error ) {
-      return handleErrorClient(res, 400, "Parametros invalidos", error.message)
     }
 
     // Actualizar solo los campos proporcionados
