@@ -1,7 +1,8 @@
-import { handleSuccess } from "../Handlers/responseHandlers.js";
+import { handleErrorClient, handleSuccess } from "../Handlers/responseHandlers.js";
 import { AppDataSource } from "../config/configDB.js";
 import { User } from "../entities/User.entity.js";
 import bcrypt from "bcrypt";
+import { userQueryValidation } from "../validations/user.validation.js";
 
 export function getPublicProfile(req, res) {
   handleSuccess(res, 200, "Perfil público obtenido exitosamente", {
@@ -29,6 +30,11 @@ export const updateProfile = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    const { error } = userQueryValidation.validate(email, password);
+    if ( error ) {
+      return handleErrorClient(res, 400, "Parametros invalidos", error.message)
     }
 
     // Actualizar solo los campos proporcionados
