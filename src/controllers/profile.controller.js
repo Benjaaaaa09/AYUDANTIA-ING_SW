@@ -39,25 +39,13 @@ export const updateProfile = async (req, res) => {
     }
     
     // Actualizar solo los campos proporcionados
-    
     if (email) user.email = email;
     if (password) {
       const saltRounds = 10;
       user.password = await bcrypt.hash(password, saltRounds);
     }
 
-    /* 
-    const updateData = {};
-    if (email) updateData.email = email;
-    if (password) {
-      const saltRounds = 10;
-      updateData.password = await bcrypt.hash(password, saltRounds);
-    }
-    */
-
     await userRepository.save(user);
-
-    //await userRepository.update(userId, updateData);
 
     res.json({
       message: "Perfil actualizado exitosamente",

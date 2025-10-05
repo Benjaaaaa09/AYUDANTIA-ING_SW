@@ -22,10 +22,6 @@ export async function login(req, res) {
 export async function register(req, res) {
   try {
     const data = req.body;
-    /* 
-    if (!data.email || !data.password) {
-      return handleErrorClient(res, 400, "Email y contraseña son requeridos");
-    } */
 
     //* Validacion del body
     const { error } = userBodyValidation.validate(req.body);
@@ -40,13 +36,5 @@ export async function register(req, res) {
 
     console.error("Error al registrar usuario:", error);
     res.status(500).json({ message: "Error interno del servidor" });
-
-    /* codigo anterior en el catch
-    if (error.code === '23505') { // Código de error de PostgreSQL para violación de unique constraint
-      handleErrorClient(res, 409, "El email ya está registrado");
-    } else {
-      handleErrorServer(res, 500, "Error interno del servidor", error.message);
-    }
-    */
   }
 }
