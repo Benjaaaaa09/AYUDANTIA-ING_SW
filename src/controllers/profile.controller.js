@@ -30,11 +30,6 @@ export const updateProfile = async (req, res) => {
       return handleErrorClient(res, 400, "Error al modificar el cliente", error.message)
     }
 
-    /* 
-    if (!email && !password) {
-      return handleErrorClient(res, 400, "Email y contraseña son requeridos");
-    }
-    */
     const userRepository = AppDataSource.getRepository(User);
     
     const user = await userRepository.findOneBy({ id: userId });
@@ -58,7 +53,7 @@ export const updateProfile = async (req, res) => {
       const saltRounds = 10;
       updateData.password = await bcrypt.hash(password, saltRounds);
     }
-      */
+    */
 
     await userRepository.save(user);
 
