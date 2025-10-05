@@ -2,7 +2,7 @@ import { handleErrorClient, handleSuccess } from "../Handlers/responseHandlers.j
 import { AppDataSource } from "../config/configDB.js";
 import { User } from "../entities/User.entity.js";
 import bcrypt from "bcrypt";
-import { userQueryValidation } from "../validations/user.validation.js";
+import { userBodyValidation } from "../validations/user.validation.js";
 
 export function getPublicProfile(req, res) {
   handleSuccess(res, 200, "Perfil público obtenido exitosamente", {
@@ -24,21 +24,45 @@ export const updateProfile = async (req, res) => {
     const userId = req.user.id; // ID extraído del token JWT
     const { email, password } = req.body;
 
+   //* Validacion del body
+    const { error } = userBodyValidation.validate(req.body);
+    if (error){
+      return handleErrorClient(res, 400, "Error al modificar el cliente", error.message)
+    }
+
+    /* 
+    if (!email && !password) {
+      return handleErrorClient(res, 400, "Email y contraseña son requeridos");
+    }
+    */
     const userRepository = AppDataSource.getRepository(User);
+    
     const user = await userRepository.findOneBy({ id: userId });
 
     if (!user) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
-
+    
     // Actualizar solo los campos proporcionados
+    
     if (email) user.email = email;
     if (password) {
       const saltRounds = 10;
       user.password = await bcrypt.hash(password, saltRounds);
     }
 
+    /* 
+    const updateData = {};
+    if (email) updateData.email = email;
+    if (password) {
+      const saltRounds = 10;
+      updateData.password = await bcrypt.hash(password, saltRounds);
+    }
+      */
+
     await userRepository.save(user);
+
+    //await userRepository.update(userId, updateData);
 
     res.json({
       message: "Perfil actualizado exitosamente",
@@ -51,6 +75,7 @@ export const updateProfile = async (req, res) => {
 
   } catch (error) {
     console.error("Error al actualizar perfil:", error);
+    console.error(error.stack);
     res.status(500).json({ message: "Error interno del servidor" });
   }
 }; 

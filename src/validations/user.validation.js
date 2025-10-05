@@ -1,39 +1,44 @@
 "use strict";
-import Joi from "joi";
 import joi from "joi";
 
 /*
     email, password
 */
 
-export const userQueryValidation = joi.object ({
-    /*     
-    name: joi.string()
+export const userBodyValidation = joi.object ({
+     
+    username: joi.string()
         .empty()
-        .required()
-
-
-    , */
+        .optional()   
+        .trim() //Elimina automaticamente los espacios al inicio y final del nombre
+        .min(3)
+        .max(50)
+        .messages({
+            "string.empty": "El nombre no puede ser vacio",
+            "string.min": "El nombre debe tener al menos 3 caracteres",
+            "string.max": "El nombre debe tener como maximo 50 caracteres",
+            "string.base": "El nombre debe ser de tipo texto",
+        })
+    , 
     email: joi.string()
+        .optional()
         .email()
-        .required()
-        .message({
+        .messages({
             "string.empty": "el email no puede estar vacio",
-            "any.required": "El email es obligatorio",
-            "string.email": "El email debe tener un dormato valido"
+            "string.email": "El email debe tener un formato valido"
         })
     ,
     password: joi.string()
+        .optional()
         .min(6)
         .max(50)
         .pattern(/^[a-zA-Z0-9]+$/)
-        .required()
         .messages({
             "string.empty": "La contraseña no puede estar vacia",
-            "any.require": "La contraseña es obligatoria",
             "string.base": "La contraseña debe ser de tipo texto",
             "string.min": "La contraseña debe tener al menos 6 caracteres",
             "string.max": "La contraseña debe tener como maxima 50 caracteristicas",
-            "string.pattern.base": "La contraseña solo puede conectar letras y numeros" 
+            "string.pattern": "La contraseña solo puede contener letras y numeros",
+            "string.pattern.base": "La contraseña solo puede contener letras y numeros" 
         })
 })
