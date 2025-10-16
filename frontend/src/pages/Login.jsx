@@ -19,8 +19,7 @@ const Login = () => {
 
         try {
             const result = await login({ email, password });
-            console.log('Resultado completo del login:', result);
-
+            
             if (result.status === 200 || (result.data && !result.error)) {
                 // Obtener el usuario del sessionStorage después del login
                 const storedUser = sessionStorage.getItem('usuario');
