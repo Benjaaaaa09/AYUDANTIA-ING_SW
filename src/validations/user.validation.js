@@ -2,7 +2,7 @@
 import joi from "joi";
 
 /*
-    username, email, password
+    email, password
 */
 
 export const userBodyValidation = joi.object ({
